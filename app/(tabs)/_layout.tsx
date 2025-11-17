@@ -1,50 +1,30 @@
+import { useThemeStore } from "@/stores/theme-store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
-
-// Paleta VitalPro
-const Colors = {
-  light: {
-    background: "#FFFFFF",
-    tint: "#00796B",
-    tabIconDefault: "#A0A0A0",
-    tabIconSelected: "#00796B",
-  },
-  dark: {
-    background: "#000000",
-    tint: "#4DD0E1",
-    tabIconDefault: "#888888",
-    tabIconSelected: "#4DD0E1",
-  },
-};
 
 export default function TabsLayout() {
-  const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? "light"];
+  const { theme } = useThemeStore();
+  const isDark = theme === "dark";
 
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: isDark ? "#8AB4F8" : "#1A73E8",
+        tabBarInactiveTintColor: isDark ? "#6B7280" : "#94A3B8",
+        tabBarBackground: () => null,
         tabBarStyle: {
-          position: 'absolute',
-          bottom: 10,
-          left: 20,
-          right: 20,
+          backgroundColor: isDark ? "#161B22" : "#FFFFFF",
+          borderTopWidth: 0.5,
+          borderTopColor: isDark ? "#2D333B" : "#E2E8F0",
           height: 70,
-          borderRadius: 30,
-          paddingBottom: 8,
+          paddingBottom: 10,
+          paddingTop: 5,
         },
-        
-        tabBarActiveTintColor: theme.tabIconSelected,
-        tabBarInactiveTintColor: theme.tabIconDefault,
-        headerStyle: {
-          backgroundColor: theme.background,
+
+        tabBarLabelStyle: {
+          fontSize: 12,
         },
-        headerTintColor: theme.tint,
-        headerTitleStyle: {
-          fontWeight: "600",
-          fontSize: 20,
-        }
       }}
     >
       <Tabs.Screen
@@ -77,7 +57,6 @@ export default function TabsLayout() {
         }}
       />
 
-     
       <Tabs.Screen
         name="profile"
         options={{

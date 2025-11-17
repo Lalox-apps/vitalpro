@@ -1,11 +1,12 @@
+import ViewContainer from '@/components/ViiewContainer'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Text } from 'react-native'
 
 const Health = () => {
   return (
-    <View>
+    <ViewContainer>
       <Text>health</Text>
-    </View>
+    </ViewContainer>
   )
 }
 
