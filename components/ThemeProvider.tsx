@@ -8,9 +8,10 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   const isDark = theme === "dark";
 
   return (
-    <SafeAreaView  className={theme === "dark" ? "bg-black" : "bg-white"} style={{ flex: 1 }}>
-       <StatusBar style={isDark ? "light" : "dark"} />
+    <SafeAreaView   className={theme === "dark" ? "bg-black" : "bg-white"} style={{ flex: 1,  }}>
+       <StatusBar style={isDark ? "light" : "dark" } translucent/>
       {children}
     </SafeAreaView>
+    
   );
 }

@@ -1,5 +1,6 @@
 import { useThemeStore } from "@/stores/theme-store";
-import { ScrollView, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 function Card({ children }: any) {
   return (
@@ -9,9 +10,12 @@ function Card({ children }: any) {
   );
 }
 
-function Option({ label, isLast }: any) {
+function Option({ label, isLast, href }: any) {
+  const router = useRouter();
+
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => href && router.push(href)}
       className={`py-3 ${
         !isLast ? "border-b border-border dark:border-dark-border" : ""
       }`}
@@ -19,7 +23,7 @@ function Option({ label, isLast }: any) {
       <Text className="text-foreground dark:text-dark-foreground">
         {label}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -44,7 +48,7 @@ export default function HealthScreen() {
           Actividad física
         </Text>
 
-        <Option label="Registrar entrenamiento" />
+        <Option label="Registrar entrenamiento"  href="/health/exercises/add"/>
         <Option label="Mis rutinas" />
         <Option label="Progreso" isLast />
       </Card>

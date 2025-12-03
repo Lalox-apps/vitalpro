@@ -1,11 +1,11 @@
 
 import * as SQLite from 'expo-sqlite';
 
-let db: SQLite.SQLiteDatabase | null = null;
+let db: SQLite.SQLiteDatabase ;
 
 export const initDB = async () => {
  if (db) return;
-  db = await SQLite.openDatabaseAsync('gorin.db');
+  db = await SQLite.openDatabaseAsync('gorin.db') ;
 
   await db.execAsync(
     `BEGIN;
