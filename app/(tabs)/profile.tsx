@@ -1,11 +1,14 @@
+import { getThemeStyles } from "@/components/Theme";
 import ViewContainer from "@/components/ViiewContainer";
 import { useEffect } from "react";
 import { Switch, Text, View } from "react-native";
-import { useThemeStore } from "../../../stores/theme-store";
+import { useThemeStore } from "../../stores/theme-store";
 
 export default function ProfileScreen() {
   const theme = useThemeStore((state) => state.theme);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  const isDark = theme === "dark";
+  const styles = getThemeStyles(isDark);
 
   // Aplica la clase global "dark" para tailwind
   useEffect(() => {
@@ -26,10 +29,10 @@ export default function ProfileScreen() {
           source={require("../../assets/avatar.png")}
           className="w-28 h-28 rounded-full"
         /> */}
-        <Text className="text-2xl font-semibold mt-3 text-foreground dark:text-dark-foreground">
+        <Text className={`text-2xl font-semibold mt-3 ${styles.text}`}>
           Eduardo
         </Text>
-        <Text className="text-sm text-muted dark:text-dark-muted mt-1">
+        <Text className={`text-sm ${styles.textMuted}`}>
           Nivel de bienestar: Intermedio
         </Text>
       </View>
@@ -39,12 +42,12 @@ export default function ProfileScreen() {
         Opciones
       </Text>
 
-      <Card>
-        <Option label="Mi información" />
-        <Option label="Progreso de hábitos" />
-        <Option label="Recetas guardadas" />
-        <Option label="Ejercicios favoritos" />
-        <Option label="Meditaciones guardadas" isLast />
+      <Card style={styles} >
+        <Option label="Mi información"  style={styles}/>
+        <Option label="Progreso de hábitos" style={styles}/>
+        <Option label="Recetas guardadas"  style={styles}/>
+        <Option label="Ejercicios favoritos" style={styles}/>
+        <Option label="Meditaciones guardadas" isLast style={styles}/>
       </Card>
 
       {/* Apariencia */}
@@ -52,8 +55,8 @@ export default function ProfileScreen() {
         Apariencia
       </Text>
 
-      <View className="bg-card dark:bg-dark-card p-4 rounded-2xl mb-4 flex-row justify-between items-center">
-        <Text className="text-foreground dark:text-dark-foreground">
+      <View className = {`${styles.card} p-4 rounded-2xl mb-4 flex-row justify-between items-center`}>
+        <Text className = {`${styles.text}`}>
           Tema oscuro
         </Text>
 
@@ -61,6 +64,7 @@ export default function ProfileScreen() {
         <Switch
           value={theme === "dark"}
           onValueChange={toggleTheme}
+          trackColor={{true:"#4D9FF5", false: null}}
         />
       </View>
 
@@ -69,36 +73,36 @@ export default function ProfileScreen() {
         General
       </Text>
 
-      <Card>
-        <Option label="Notificaciones" />
-        <Option label="Privacidad" />
-        <Option label="Acerca de VitalPro" isLast />
+      <Card style={styles}>
+        <Option label="Notificaciones" style={styles}/>
+        <Option label="Privacidad" style={styles}/>
+        <Option label="Acerca de VitalPro" isLast style={styles}/>
       </Card>
 
       {/* Logout */}
-      <View className="items-center mt-4">
+      {/* <View className="items-center mt-4">
         <View className="border border-primary dark:border-dark-primary px-6 py-3 rounded-xl">
           <Text className="text-primary dark:text-dark-primary font-semibold">
             Cerrar sesión
           </Text>
         </View>
-      </View>
+      </View> */}
     </ViewContainer>
   );
 }
 
-function Card({ children }:any) {
+function Card({ children, style }:any) {
   return (
-    <View className="bg-card dark:bg-dark-card p-4 rounded-2xl mb-4">
+    <View className={`${style.card} p-4 rounded-2xl mb-4`}>
       {children}
     </View>
   );
 }
 
-function Option({ label, isLast }:any) {
+function Option({ label, isLast , style}:any) {
   return (
     <View className={`py-3 ${!isLast ? "border-b border-border dark:border-dark-border" : ""}`}>
-      <Text className="text-foreground dark:text-dark-foreground">
+      <Text className ={`${style.text}`}>
         {label}
       </Text>
     </View>

@@ -22,26 +22,15 @@ export default function RootLayout() {
     <Stack.Screen 
       name="(tabs)"
       options={{
-        headerShown:false
+        headerShown:false,
       }}
     />
     <Stack.Screen 
       name="health"
       options={() => {
-        
-    
         return {
-          headerShown: true,
-          title: "Actividad física",
-          headerBackTitle: "Principal",
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: isDark ? "#000000" : "#FFFFFF",
-          },
-          headerTitleStyle: {
-            color: isDark ? "#FFFFFF" : "#1A73E8",
-          },
-          headerLeft: () => <BackButton />,
+          headerShown: false,
+
         };
       }}
     />
