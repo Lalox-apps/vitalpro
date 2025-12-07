@@ -2,6 +2,7 @@ import { getThemeStyles } from '@/components/Theme';
 import { useThemeStore } from "@/stores/theme-store";
 import { useExerciseStore } from '@/stores/useExerciseStore';
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -10,6 +11,7 @@ export default function Exercises() {
   const isDark = theme === "dark";
   const {loadExercises, exercises, deleteExercise}= useExerciseStore()
   const styles = getThemeStyles(isDark)
+  const router = useRouter()
   useEffect( () => {
     const fetchExercises = async()=>{
       await loadExercises()
@@ -59,10 +61,14 @@ export default function Exercises() {
              Duración {item.duration} min.
             </Text>
            </View>
-           <View>
-             <TouchableOpacity onPress={()=>eliminateExercise(item.id)} >
+           <View className="flex-row">
+           <TouchableOpacity  className="mr-2" onPress={()=>router.push({pathname:"/health/exercises/add", params:{exerciseId:item.id}})} >
+             <Ionicons name="pencil-sharp" size={24} color="#0F5AC4" />
+           </TouchableOpacity>
+            
+           <TouchableOpacity onPress={()=>eliminateExercise(item.id)} >
              <Ionicons name="trash" size={24} color="red" />
-             </TouchableOpacity>
+           </TouchableOpacity>
            </View>
           </View>
         )
