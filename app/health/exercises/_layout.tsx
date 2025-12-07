@@ -9,6 +9,22 @@ export default function ExercisesLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen 
+        name="index"
+        options={{
+          headerShown: true,
+          title: "Actividad física",
+          headerBackTitle: "Principal",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: isDark ? "#000000" : "#FFFFFF",
+          },
+          headerTitleStyle: {
+            color: isDark ? "#FFFFFF" : "#1A73E8",
+          },
+          headerLeft: () => <BackButton  isDark={isDark}/>,
+        }}
+      />
+      <Stack.Screen 
         name="add"
         options={{
           headerShown: true,
@@ -24,6 +40,7 @@ export default function ExercisesLayout() {
           headerLeft: () => <BackButton  isDark={isDark}/>,
         }}
       />
+
     </Stack>
   );
 }

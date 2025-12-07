@@ -2,7 +2,7 @@ import { getDB } from "@/libs/database";
 import { create } from "zustand";
 
 export interface ExerciseEntry {
-  id?: number;
+  id: number;
   type: string;
   duration: number; // minutos
   intensity: string;
@@ -13,6 +13,7 @@ interface ExerciseState {
   exercises: ExerciseEntry[];
   loadExercises: () => Promise<void>;
   addExercise: (entry: ExerciseEntry) => Promise<void>;
+  deleteExercise:(id:number)=> Promise<void>
 }
 
 export const useExerciseStore = create<ExerciseState>((set) => ({
@@ -40,6 +41,21 @@ export const useExerciseStore = create<ExerciseState>((set) => ({
     );
 
     // Recargar
+    const rows = await db.getAllAsync<ExerciseEntry>(
+      "SELECT * FROM exercises ORDER BY created_at DESC"
+    );
+
+    set({ exercises: rows });
+  },
+
+  deleteExercise: async (id) => {
+    const db = getDB();
+    if (!db) return;
+
+    await db.runAsync(
+      "DELETE FROM exercises WHERE id =?",[id]
+    );
+
     const rows = await db.getAllAsync<ExerciseEntry>(
       "SELECT * FROM exercises ORDER BY created_at DESC"
     );

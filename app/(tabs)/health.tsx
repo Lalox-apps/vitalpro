@@ -43,7 +43,6 @@ export default function HealthScreen() {
       <Text className={`text-2xl font-semibold mb-6 ${styles.text}`}>
         Salud & Bienestar
       </Text>
-–
       
       <Card  style={styles}>
         <Text className={`text-lg font-semibold mb-2 ${styles.text}`}>
@@ -51,7 +50,7 @@ export default function HealthScreen() {
         </Text>
 
         <Option label="Registrar entrenamiento"  href="/health/exercises/add" style={styles}/>
-        <Option label="Mis rutinas" style={styles}/>
+        <Option label="Mis rutinas"  href="/health/exercises"  style={styles}/>
         <Option label="Progreso" isLast  style={styles}/>
       </Card>
 
