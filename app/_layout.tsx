@@ -34,6 +34,14 @@ export default function RootLayout() {
         };
       }}
     />
+    <Stack.Screen 
+      name="perfil"
+      options={() => {
+        return {
+          headerShown: false,
+        };
+      }}
+    />
     
   </Stack>
   </ThemeProvider>

@@ -1,18 +1,18 @@
 import { getThemeStyles } from "@/components/Theme";
 import ViewContainer from "@/components/ViiewContainer";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Switch, Text, View } from "react-native";
+import { Switch, Text, TouchableOpacity, View } from "react-native";
 import { useThemeStore } from "../../stores/theme-store";
-
 export default function ProfileScreen() {
   const theme = useThemeStore((state) => state.theme);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
   const isDark = theme === "dark";
   const styles = getThemeStyles(isDark);
 
-  // Aplica la clase global "dark" para tailwind
+
   useEffect(() => {
-    // Solo existe en web, así que lo protegemos
+
     if (typeof document !== "undefined") {
       const root = document.documentElement;
       if (theme === "dark") root.classList.add("dark");
@@ -43,11 +43,11 @@ export default function ProfileScreen() {
       </Text>
 
       <Card style={styles} >
-        <Option label="Mi información"  style={styles}/>
-        <Option label="Progreso de hábitos" style={styles}/>
-        <Option label="Recetas guardadas"  style={styles}/>
-        <Option label="Ejercicios favoritos" style={styles}/>
-        <Option label="Meditaciones guardadas" isLast style={styles}/>
+        <Option label="Mi información"  style={styles} href="/"/>
+        <Option label="Progreso de hábitos" style={styles} href="/"/>
+        <Option label="Recetas guardadas"  style={styles} href="/"/>
+        <Option label="Ejercicios favoritos" style={styles} href="/"/>
+        <Option label="Meditaciones guardadas" isLast style={styles} href="/"/>
       </Card>
 
       {/* Apariencia */}
@@ -74,9 +74,9 @@ export default function ProfileScreen() {
       </Text>
 
       <Card style={styles}>
-        <Option label="Notificaciones" style={styles}/>
-        <Option label="Privacidad" style={styles}/>
-        <Option label="Acerca de VitalPro" isLast style={styles}/>
+        <Option label="Notificaciones" style={styles} href="/perfil/notificaciones/notifications"/>
+        <Option label="Privacidad" style={styles} href="/"/>
+        <Option label="Acerca de VitalPro" isLast style={styles} href="/"/>
       </Card>
 
       {/* Logout */}
@@ -99,12 +99,15 @@ function Card({ children, style }:any) {
   );
 }
 
-function Option({ label, isLast , style}:any) {
+function Option({ label, isLast , style, href}:any) {
+  const router = useRouter()
   return (
-    <View className={`py-3 ${!isLast ? "border-b border-border dark:border-dark-border" : ""}`}>
+    <TouchableOpacity 
+    onPress={()=>  href && router.push(href)}
+     className={`py-3 ${!isLast ? "border-b border-border dark:border-dark-border" : ""}`}>
       <Text className ={`${style.text}`}>
         {label}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
