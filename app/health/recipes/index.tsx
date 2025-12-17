@@ -1,3 +1,4 @@
+import { MealType, MealTypeFilter } from "@/components/MealTypeFilter";
 import { RecipeSkeleton } from "@/components/RecipeSkeleton";
 import { supabase } from "@/libs/supabase";
 import { useThemeStore } from "@/stores/theme-store";
@@ -13,13 +14,17 @@ export type Recipe = {
   prep_time?: number;
   image_url?: string;
 };
+
 type BadgeVariant = "meal" | "time";
+
 export default function RecipesScreen() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading]=useState(true)
+  const [mealFilter, setMealFilter] = useState<MealType | 'all'>('all');
+
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -35,6 +40,12 @@ export default function RecipesScreen() {
     setLoading(false);
   }, []);
 
+  const filteredRecipes =
+  mealFilter === 'all'
+    ? recipes
+    : recipes.filter((r) => (r.meal_type).trim() === mealFilter.trim());
+
+
   return (
     <View
       className={`flex-1 py-6 ${
@@ -48,6 +59,13 @@ export default function RecipesScreen() {
       >
         Plan de Alimentación
       </Text>
+     <View>
+       <MealTypeFilter
+        value={mealFilter}
+        onChange={setMealFilter}
+        isDark={isDark}
+      />
+     </View>
 
     { loading ?(
        <FlatList
@@ -57,7 +75,7 @@ export default function RecipesScreen() {
         renderItem={() => <RecipeSkeleton isDark={isDark} />}
       />
       ) :<FlatList
-        data={recipes}
+        data={filteredRecipes}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
@@ -82,7 +100,7 @@ function RecipeCard({ recipe, isDark }: { recipe: Recipe; isDark: boolean }) {
       >
         {recipe.image_url && (
           <Image
-            source={{ uri: recipe?.image_url }}
+            source={{ uri: (recipe?.image_url).trim() }}
             style={{ width: "100%", height: 160 }}
           />
         )}
