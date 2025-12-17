@@ -1,3 +1,4 @@
+import { RecipeSkeleton } from "@/components/RecipeSkeleton";
 import { supabase } from "@/libs/supabase";
 import { useThemeStore } from "@/stores/theme-store";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,9 +19,11 @@ export default function RecipesScreen() {
   const isDark = theme === "dark";
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading]=useState(true)
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      setLoading(true);
       const { data } = await supabase
         .from("recipes")
         .select("id, title, description, meal_type, prep_time, image_url");
@@ -29,6 +32,7 @@ export default function RecipesScreen() {
     };
 
     fetchRecipes();
+    setLoading(false);
   }, []);
 
   return (
@@ -45,13 +49,20 @@ export default function RecipesScreen() {
         Plan de Alimentación
       </Text>
 
-      <FlatList
+    { loading ?(
+       <FlatList
+        data={[1, 2, 3]}
+        keyExtractor={(item) => item.toString()}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
+        renderItem={() => <RecipeSkeleton isDark={isDark} />}
+      />
+      ) :<FlatList
         data={recipes}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <RecipeCard recipe={item} isDark={isDark} />}
-      />
+      /> }
     </View>
   );
 }
