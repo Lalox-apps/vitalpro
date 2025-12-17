@@ -59,7 +59,7 @@ export default function HealthScreen() {
           Alimentación
         </Text>
 
-        <Option label="Plan de comidas" style={styles}/>
+        <Option label="Plan de comidas" href="/health/recipes" style={styles}/>
         <Option label="Hidratación" style={styles} />
         <Option label="Calorías diarias" isLast  style={styles}/>
       </Card>
