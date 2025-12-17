@@ -7,13 +7,13 @@ export default function RecipesLayout() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack >
       <Stack.Screen 
         name="index"
         options={{
-          headerShown: true,
           title: "Recetas",
           headerShadowVisible: false,
+          headerTitleAlign:"center",
           headerStyle: {
             backgroundColor: isDark ? "#000000" : "#FFFFFF",
           },
