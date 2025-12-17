@@ -8,6 +8,8 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+.env
+.env.*
 
 # Native
 .kotlin/
@@ -41,3 +43,9 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Backups locales
+recipes_backup.ts
+recipes.backup.ts
+src/**/recipes_backup.ts
+src/**/recipes.backup.ts
