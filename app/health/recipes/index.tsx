@@ -3,6 +3,7 @@ import { RecipeSkeleton } from "@/components/RecipeSkeleton";
 import { supabase } from "@/libs/supabase";
 import { useThemeStore } from "@/stores/theme-store";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 
@@ -20,7 +21,6 @@ type BadgeVariant = "meal" | "time";
 export default function RecipesScreen() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
-
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading]=useState(true)
   const [mealFilter, setMealFilter] = useState<MealType | 'all'>('all');
@@ -44,8 +44,6 @@ export default function RecipesScreen() {
   mealFilter === 'all'
     ? recipes
     : recipes.filter((r) => (r.meal_type).trim() === mealFilter.trim());
-
-
   return (
     <View
       className={`flex-1 py-6 ${
@@ -86,8 +84,11 @@ export default function RecipesScreen() {
 }
 
 function RecipeCard({ recipe, isDark }: { recipe: Recipe; isDark: boolean }) {
+  const router = useRouter()
   return (
-    <Pressable className="mb-6 rounded-2xl overflow-hidden">
+    <Pressable 
+    onPress={()=> router.push({ pathname: '/health/recipes/[id]', params: { id: recipe.id.toString() } })}
+    className="mb-6 rounded-2xl overflow-hidden">
       <View
         style={{
           backgroundColor: isDark ? "#151520" : "#FFFFFF",

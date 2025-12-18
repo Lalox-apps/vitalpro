@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 
+
 export default function RecipesLayout() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
@@ -23,6 +24,25 @@ export default function RecipesLayout() {
           headerLeft: () => <BackButton  isDark={isDark}/>,
         }}
       />
+      <Stack.Screen 
+        name="[id]"
+        options={({navigation, route})=>(
+          {
+          title: "Detalle",
+          headerShadowVisible: false,
+          headerTitleAlign:"center",
+          headerStyle: {
+            backgroundColor: isDark ? "#000000" : "#FFFFFF",
+          },
+          headerTitleStyle: {
+            color: isDark ? "#FFFFFF" : "#1A73E8",
+          },
+          headerLeft: () => <BackButton  isDark={isDark}/>,
+        }
+        )}
+      />
+      
+
       
     </Stack>
   );
