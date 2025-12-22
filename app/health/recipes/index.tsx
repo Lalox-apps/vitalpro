@@ -37,7 +37,9 @@ export default function RecipesScreen() {
     };
 
     fetchRecipes();
-    setLoading(false);
+    setTimeout(()=>{
+      setLoading(false);
+    },250)
   }, []);
 
   const filteredRecipes =

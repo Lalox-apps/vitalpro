@@ -20,6 +20,12 @@ export default function RootLayout() {
     <ThemeProvider>
     <Stack>
     <Stack.Screen 
+      name="index"
+      options={{
+        headerShown:false,
+      }}
+    />
+    <Stack.Screen 
       name="(tabs)"
       options={{
         headerShown:false,
