@@ -1,4 +1,5 @@
 import { supabase } from '@/libs/supabase';
+import { useFavoritesStore } from '@/stores/favorites-store';
 import { useThemeStore } from '@/stores/theme-store';
 import { Recipe } from '@/types/recipe';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,7 +17,10 @@ export default function RecipeDetailScreen() {
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
   const [recipe , setRecipe]= useState<Recipe>()
-     const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const favorite = isFavorite(id);
+
      useEffect(() => {
       supabase
     .from('recipes')
@@ -56,11 +60,13 @@ export default function RecipeDetailScreen() {
             {recipe?.title}
           </Text>
 
-          <Pressable className='ml-4'>
+          <Pressable 
+           onPress={()=> toggleFavorite(id)}
+           className='ml-4'>
             <Ionicons
-              name={recipe?.isFavorite ? 'heart' : 'heart-outline'}
+              name={favorite ? 'heart' : 'heart-outline'}
               size={26}
-              color={recipe?.isFavorite ? '#EF4444' : isDark ? '#fff' : '#000'}
+              color={favorite ? '#EF4444' : isDark ? '#fff' : '#000'}
             />
           </Pressable>
         </View>
@@ -70,7 +76,6 @@ export default function RecipeDetailScreen() {
           <Badge label={`${recipe?.prep_time} min`} isDark={isDark} />
         </View>
 
-        {/* Description */}
         <Text
           className={`mt-4 text-base leading-6 ${
             isDark ? 'text-muted' : 'text-dark-muted'
@@ -144,7 +149,7 @@ function Badge({ label, isDark }: { label: string; isDark: boolean }) {
   return (
     <View
       className={`mr-3 px-3 py-1 rounded-xl ${
-        isDark ? 'bg-dark-background' : 'bg-background'
+        isDark ? 'bg-dark-background' : 'bg-gray-200'
       }`}
     >
       <Text className={isDark ? 'text-dark-foreground' : 'text-foreground'}>
