@@ -1,12 +1,12 @@
 
 import DatabaseInitializer from "@/components/DatabaseInitializer";
+
 import ThemeProvider from "@/components/ThemeProvider";
 import { useThemeStore } from "@/stores/theme-store";
-import { Ionicons } from '@expo/vector-icons';
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
 import { Suspense } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import "../global.css";
 
 
@@ -50,6 +50,7 @@ export default function RootLayout() {
     />
     
   </Stack>
+  
   </ThemeProvider>
   </DatabaseInitializer>
   </Suspense>
@@ -62,13 +63,3 @@ const FallbackLoader = () => (
   </View>
 );
 
-const BackButton=()=>{
-  const router = useRouter();
-return(
-  <TouchableOpacity
-  onPress={()=>router.back()}
-  >
-   <Ionicons  name="arrow-back" size={24} color="#1A73E8"/>
-</TouchableOpacity>
-)
-}

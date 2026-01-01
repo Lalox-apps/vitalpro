@@ -1,5 +1,5 @@
 import CustomButton from '@/components/CustomButton';
-import { supabase } from '@/libs/supabase';
+import { api } from '@/core/api';
 import { useThemeStore } from '@/stores/theme-store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
@@ -30,38 +30,23 @@ export default function LoginScreen() {
     : ['#F7F9FC', '#E6EEFF'];
 
     const handleLogin = async () => {
-      try {
-        setLoading(true);
-    
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-    
-        if (error) {
-          Alert.alert('Error', error.message);
-          return;
-        }
-      } catch (e) {
-        Alert.alert('Error', 'Ocurrió un problema inesperado');
-      } finally {
-        setLoading(false);
+      const res = await api.post('auth/login', {
+        email,
+        password,
+      });
+      
+      if (res.success) {
+        console.log('LOGIN OK', res.data);
+      } else {
+        Alert.alert('Error', res.message ?? 'Error');
       }
+      
     };
     
     const handleRegister = async () => {
       try {
         setLoading(true);
-    
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-    
-        if (error) {
-          Alert.alert('Error', error.message);
-          return;
-        }
+       
   
       } catch (e) {
         Alert.alert('Error', 'No se pudo crear la cuenta');
