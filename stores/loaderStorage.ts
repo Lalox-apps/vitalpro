@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface LoaderState {
   visible: boolean;
@@ -11,4 +11,3 @@ export const useLoaderStore = create<LoaderState>((set) => ({
   show: () => set({ visible: true }),
   hide: () => set({ visible: false }),
 }));
-export const loaderStore = useLoaderStore.getState();

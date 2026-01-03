@@ -1,6 +1,6 @@
 
 import DatabaseInitializer from "@/components/DatabaseInitializer";
-
+import LoaderOverlay from "@/components/LoaderOverlay";
 import ThemeProvider from "@/components/ThemeProvider";
 import { useThemeStore } from "@/stores/theme-store";
 import { Stack } from "expo-router";
@@ -50,7 +50,7 @@ export default function RootLayout() {
     />
     
   </Stack>
-  
+  <LoaderOverlay/>
   </ThemeProvider>
   </DatabaseInitializer>
   </Suspense>

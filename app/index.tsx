@@ -18,6 +18,7 @@ import {
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'L' | 'R'>('L');
 
@@ -44,17 +45,23 @@ export default function LoginScreen() {
     };
     
     const handleRegister = async () => {
-      try {
-        setLoading(true);
-       
-  
-      } catch (e) {
-        Alert.alert('Error', 'No se pudo crear la cuenta');
-      } finally {
-        setLoading(false);
+      const res = await api.post('auth/register', {
+        name,
+        email,
+        password,
+      });
+      
+      if (res.success) {
+        console.log('Register OK', res.data);
+      } else {
+        Alert.alert('Error', res.message ?? 'Error');
       }
     };
-    
+    const  cleanInputs=()=>{
+      setEmail('')
+      setName('')
+      setPassword('')
+    }
 
   return (
     <LinearGradient colors={gradientColors} style={{ flex: 1 }}>
@@ -119,6 +126,19 @@ export default function LoginScreen() {
                   : 'Crea tu cuenta'}
               </Text>
 
+             {step === 'R'?
+              <TextInput
+                placeholder="Nombre"
+                placeholderTextColor={isDark ? '#6B7280' : '#94A3B8'}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="none"
+                className={`h-14 rounded-2xl px-5 mb-4 border ${
+                  isDark
+                    ? 'bg-dark-background text-dark-foreground border-dark-border'
+                    : 'bg-background text-foreground border-border'
+                }`}
+              />: null}
               {/* ✏️ Email */}
               <TextInput
                 placeholder="Correo electrónico"
@@ -134,7 +154,7 @@ export default function LoginScreen() {
                 }`}
               />
 
-              {/* 🔒 Password */}
+    
               <TextInput
                 placeholder="Contraseña"
                 placeholderTextColor={isDark ? '#6B7280' : '#94A3B8'}
@@ -148,7 +168,7 @@ export default function LoginScreen() {
                 }`}
               />
 
-              {/* 🔘 CTA principal */}
+          
               <CustomButton
                 variant="primary"
                 disable={loading || email === '' || password.length < 6}
@@ -164,7 +184,7 @@ export default function LoginScreen() {
                 }
               />
 
-              {/* 🔗 Links secundarios */}
+            
               {step === 'L' && (
                 <TouchableOpacity className="mt-4">
                   <Text
@@ -179,7 +199,10 @@ export default function LoginScreen() {
 
               <TouchableOpacity
                 className="mt-4"
-                onPress={() => setStep(step === 'L' ? 'R' : 'L')}
+                onPress={() => {
+                  cleanInputs()
+                  setStep(step === 'L' ? 'R' : 'L')
+                }}
               >
                 <Text
                   className={`text-center font-medium ${

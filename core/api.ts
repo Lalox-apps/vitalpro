@@ -1,3 +1,4 @@
+import { useLoaderStore } from '@/stores/loaderStorage';
 
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -17,13 +18,15 @@ function buildUrl(endpoint: string) {
 async function request<T>(
   endpoint: string,
   method: FetchMethod,
-  data?: any
+  data?: any,
+  showLoader: boolean = true 
 ): Promise<ApiResponse<T>> {
   const url = buildUrl(endpoint);
-
+  const loader = useLoaderStore.getState();
   console.log('➡️ API REQUEST:', method, url, data ?? '');
 
   try {
+    if (showLoader) loader.show();
     const res = await fetch(url, {
       method,
       headers: {
@@ -52,15 +55,17 @@ async function request<T>(
       success: false,
       message: 'No se pudo conectar con el servidor',
     };
+  }finally{
+    if (showLoader) loader.hide();
   }
 }
 
 export const api = {
-  post<T>(endpoint: string, data?: any) {
+  post<T>(endpoint: string, data?: any, showLoader= true) {
     return request<T>(endpoint, 'POST', data);
   },
 
-  get<T>(endpoint: string) {
-    return request<T>(endpoint, 'GET');
+  get<T>(endpoint: string, showLoader = true) {
+    return request<T>(endpoint, 'GET', undefined, showLoader);
   },
 };
