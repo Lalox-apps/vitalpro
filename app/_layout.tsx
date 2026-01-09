@@ -6,48 +6,60 @@ import { api } from "@/core/api";
 import { getToken } from "@/core/auth";
 import { useAuthStore } from "@/stores/auth-stores";
 import { useThemeStore } from "@/stores/theme-store";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { Text, View } from "react-native";
 import "../global.css";
 
 
 export default function RootLayout() {
   const { theme } = useThemeStore();
-  const { setSession, clearSession } = useAuthStore();
-  const [booting, setBooting] = useState(true);
-  const isDark = theme === "dark";
-
+  const router = useRouter()
+  const { setSession, clearSession, setBooted , booted, isAuthenticated} = useAuthStore();
 
   useEffect(() => {
     const boot = async () => {
+      console.log('🟡 BOOT START');
+  
       const token = await getToken();
-
+      console.log('🟡 TOKEN FROM STORAGE:', token);
+  
       if (!token) {
-        setBooting(false);
+        console.log('🔴 NO TOKEN → setBooted');
+        setBooted();
         return;
       }
-
+  
       api.setToken(token);
-
-      const res = await api.get('users/me');
-
+      console.log('🟢 TOKEN SET IN API');
+  
+      const res = await api.get('users/me', false);
+      console.log('🟡 /users/me RESPONSE:', res);
+  
       if (res.success) {
+        console.log('🟢 SESSION VALID → setSession');
         setSession(token, res.data);
       } else {
+        console.log('🔴 SESSION INVALID → clearSession');
         clearSession();
       }
-
-      setBooting(false);
     };
-
+  
     boot();
-  }, [setSession, clearSession]);
+  }, []);
+  
+  useEffect(() => {
+    if (!booted) return;
+  
+    if (isAuthenticated) {
+      router.replace('/(tabs)');
+    } else {
+      router.replace('/');
+    }
+  }, [booted, isAuthenticated]);
+  
 
-  if (booting) {
-    return null; 
-  }
   return (
     <SQLiteProvider databaseName="gorin.db" useSuspense>
     <Suspense fallback={<FallbackLoader/>}>

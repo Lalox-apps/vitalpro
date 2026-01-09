@@ -1,10 +1,27 @@
+import { useAuthStore } from "@/stores/auth-stores";
 import { useThemeStore } from "@/stores/theme-store";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 
 export default function TabsLayout() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
+  const { isAuthenticated, booted, token } = useAuthStore();
+
+  console.log('🧩 TABS LAYOUT');
+  console.log('booted:', booted);
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('token:', token);
+
+  if (!booted) {
+    console.log('⏳ WAITING FOR BOOT');
+    return null;
+  }
+
+  if (!isAuthenticated) {
+    console.log('🔴 NOT AUTHENTICATED → REDIRECT LOGIN');
+    return <Redirect href="/" />;
+  }
 
   return (
     <Tabs

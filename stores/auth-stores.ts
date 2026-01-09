@@ -1,30 +1,28 @@
 import { create } from 'zustand';
 
-export type User = {
-  id: string;
-  email: string;
-  name: string | null;
-  role: 'USER' | 'ADMIN';
-};
-
-interface AuthState {
+type AuthState = {
   token: string | null;
-  user: User | null;
+  user: any | null;
   isAuthenticated: boolean;
-  setSession: (token: string, user: User) => void;
+  booted: boolean;
+
+  setSession: (token: string, user: any) => void;
   clearSession: () => void;
-}
+  setBooted: () => void;
+};
 
 export const useAuthStore = create<AuthState>((set) => ({
   token: null,
   user: null,
   isAuthenticated: false,
+  booted: false,
 
   setSession: (token, user) =>
     set({
       token,
       user,
       isAuthenticated: true,
+      booted: true,
     }),
 
   clearSession: () =>
@@ -32,5 +30,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       token: null,
       user: null,
       isAuthenticated: false,
+      booted: true,
     }),
+
+  setBooted: () => set({ booted: true }),
 }));
