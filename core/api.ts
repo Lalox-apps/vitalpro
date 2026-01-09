@@ -8,7 +8,12 @@ export type ApiResponse<T = any> = {
   message?: string;
 };
 
-const BASE_URL = 'http://192.168.1.18:3000'; 
+const BASE_URL = 'http://192.168.1.82:3000'; 
+let authToken: string | null = null;
+
+function setToken(token: string | null) {
+  authToken = token;
+}
 
 function buildUrl(endpoint: string) {
   if (endpoint.startsWith('/')) return BASE_URL + endpoint;
@@ -22,16 +27,20 @@ async function request<T>(
   showLoader: boolean = true 
 ): Promise<ApiResponse<T>> {
   const url = buildUrl(endpoint);
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
   const loader = useLoaderStore.getState();
   console.log('➡️ API REQUEST:', method, url, data ?? '');
-
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
+  }
+  
   try {
     if (showLoader) loader.show();
     const res = await fetch(url, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
 
@@ -45,10 +54,7 @@ async function request<T>(
       };
     }
 
-    return {
-      success: true,
-      data: json,
-    };
+    return json
   } catch (error: any) {
     console.error('❌ API ERROR:', error);
     return {
@@ -60,9 +66,12 @@ async function request<T>(
   }
 }
 
+
+
 export const api = {
+  setToken,
   post<T>(endpoint: string, data?: any, showLoader= true) {
-    return request<T>(endpoint, 'POST', data);
+    return request<T>(endpoint, 'POST', data, showLoader);
   },
 
   get<T>(endpoint: string, showLoader = true) {

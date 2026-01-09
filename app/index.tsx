@@ -1,7 +1,10 @@
 import CustomButton from '@/components/CustomButton';
 import { api } from '@/core/api';
+import { saveToken } from '@/core/auth';
+import { useAuthStore } from '@/stores/auth-stores';
 import { useThemeStore } from '@/stores/theme-store';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   Alert,
@@ -14,6 +17,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+ 
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -21,11 +25,15 @@ export default function LoginScreen() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'L' | 'R'>('L');
-
+  const [booting, setBooting] = useState(true);
+  const { setSession, clearSession } = useAuthStore();
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
-
-  /* 🎨 Gradient refinado */
+  const router = useRouter()
+ 
+ 
+  
+ 
   const gradientColors: readonly [ColorValue, ColorValue] = isDark
     ? ['#0D1117', '#161B22']
     : ['#F7F9FC', '#E6EEFF'];
@@ -35,9 +43,17 @@ export default function LoginScreen() {
         email,
         password,
       });
-      
+      console.log('res--->', res)
       if (res.success) {
+
+        const { token, user } = res.data;
+
+        await saveToken(token);
+        setSession(token, user);
         console.log('LOGIN OK', res.data);
+        api.setToken(token)
+        router.replace('/(tabs)');
+       
       } else {
         Alert.alert('Error', res.message ?? 'Error');
       }
